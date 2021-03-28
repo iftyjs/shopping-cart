@@ -28,6 +28,8 @@ firstProductAddButton.addEventListener('click', function(){
 
   firstProductNumber++;
   firstProductQuantity.value = firstProductNumber;
+
+  subTotal.innerText = subTotalAdd(getFirstProductInitialPrice);
 });
 
 // EventHandler for increasing the price
@@ -39,6 +41,8 @@ secondProductAddButton.addEventListener('click', function(){
 
   secondProductNumber++;
   secondProductQuantity.value = secondProductNumber;
+
+  subTotal.innerText = subTotalAdd(getSecondProductInitialPrice);
 })
 
 // EventHandler for decreasing the price
@@ -50,6 +54,8 @@ firstProductMinusButton.addEventListener('click', function(){
 
   firstProductNumber--;
   firstProductQuantity.value = firstProductNumber;
+
+  subTotal.innerText = subTotalDeduct(getFirstProductInitialPrice)
 });
 
 // EventHandler for decreasing the price
@@ -61,6 +67,8 @@ secondProductMinusButton.addEventListener('click', function(){
 
   secondProductNumber--;
   secondProductQuantity.value = secondProductNumber;
+
+  subTotal.innerText = subTotalDeduct(getSecondProductInitialPrice);
 });
 
 // Adding the price
@@ -73,11 +81,14 @@ function deductPrice(productInitialPrice, ProductCurrentPrice){
   return ProductCurrentPrice - productInitialPrice;
 }
 
-// subtotal
-function subTotal(firstProductTotal, secondProductTotal){
-  return firstProductTotal + secondProductTotal;
+// subtotal for add
+function subTotalAdd(amountToDeduct){
+  let getSubTotal = parseFloat(subTotal.innerText);
+  return getSubTotal + amountToDeduct;
 }
 
-// Private Project
-// Multiple Person
-// Main handler
+// subtotal for Deduct
+function subTotalDeduct(amountToDeduct){
+  let getSubTotal = parseFloat(subTotal.innerText);
+  return getSubTotal - amountToDeduct;
+}
