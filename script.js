@@ -1,94 +1,55 @@
-// get element from the dom
-const firstProductAddButton = document.querySelector('#firstProductAddButton');
-const firstProductMinusButton = document.querySelector('#firstProductMinusButton');
-const firstProductPrice = document.querySelector('#firstProductPrice');
-const firstProductQuantity = document.querySelector('#firstProductQuantity');
-
-const secondProductAddButton = document.querySelector('#secondProductAddButton');
-const secondProductMinusButton = document.querySelector('#secondProductMinusButton');
-const secondProductPrice = document.querySelector('#secondProductPrice');
-const secondProductQuantity = document.querySelector('#secondProductQuantity');
-
-const subTotal = document.querySelector('#subTotal');
-
-// Get first Product Price
-const getFirstProductInitialPrice = parseFloat(firstProductPrice.innerText);
-let firstProductNumber = firstProductQuantity.value;
-
-// Get second Product Price
-const getSecondProductInitialPrice = parseFloat(secondProductPrice.innerText);
-let secondProductNumber = firstProductQuantity.value;
-
-// EventHandler for increasing the price
-firstProductAddButton.addEventListener('click', function(){
-  const getFirstProductCurrentPrice = parseFloat(firstProductPrice.innerText);
-  const firstProductTotalPrice = addPrice(getFirstProductInitialPrice, getFirstProductCurrentPrice);
-
-  firstProductPrice.innerText = firstProductTotalPrice;
-
-  firstProductNumber++;
-  firstProductQuantity.value = firstProductNumber;
-
-  subTotal.innerText = subTotalAdd(getFirstProductInitialPrice);
+document.querySelector('#firstProductAddButton').addEventListener('click', function(){
+  productCount(true, 'phone');
 });
 
-// EventHandler for increasing the price
-secondProductAddButton.addEventListener('click', function(){
-  const getSecondProductCurrentPrice = parseFloat(secondProductPrice.innerText);
-  const secondProductTotalPrice = addPrice(getSecondProductInitialPrice, getSecondProductCurrentPrice);
-
-  secondProductPrice.innerText = secondProductTotalPrice;
-
-  secondProductNumber++;
-  secondProductQuantity.value = secondProductNumber;
-
-  subTotal.innerText = subTotalAdd(getSecondProductInitialPrice);
-})
-
-// EventHandler for decreasing the price
-firstProductMinusButton.addEventListener('click', function(){
-  const getFirstProductCurrentPrice = parseFloat(firstProductPrice.innerText);
-  const firstProductTotalPrice = deductPrice(getFirstProductInitialPrice, getFirstProductCurrentPrice);
-
-  firstProductPrice.innerText = firstProductTotalPrice;
-
-  firstProductNumber--;
-  firstProductQuantity.value = firstProductNumber;
-
-  subTotal.innerText = subTotalDeduct(getFirstProductInitialPrice)
+document.querySelector('#firstProductMinusButton').addEventListener('click', function(){
+  productCount(false, 'phone');
+});
+document.querySelector('#secondProductAddButton').addEventListener('click', function(){
+  productCount(true, 'case');
+});
+document.querySelector('#secondProductMinusButton').addEventListener('click', function(){
+  productCount(false, 'case');
 });
 
-// EventHandler for decreasing the price
-secondProductMinusButton.addEventListener('click', function(){
-  const getSecondProductCurrentPrice = parseFloat(secondProductPrice.innerText);
-  const secondProductTotalPrice = deductPrice(getSecondProductInitialPrice, getSecondProductCurrentPrice);
+function productCount(isIncreased, product){
+  const productInput = document.querySelector(`#${product}Quantity`);
+  let productCount = parseInt(productInput.value);
+  if(isIncreased){
+    productCount++;
+  }
+  if(!isIncreased && productCount > 0){
+    productCount--;
+  }
+  productInput.value = productCount;
 
-  secondProductPrice.innerText = secondProductTotalPrice;
-
-  secondProductNumber--;
-  secondProductQuantity.value = secondProductNumber;
-
-  subTotal.innerText = subTotalDeduct(getSecondProductInitialPrice);
-});
-
-// Adding the price
-function addPrice(productInitialPrice, ProductCurrentPrice){
-  return productInitialPrice + ProductCurrentPrice;
+  let currentProductPrice = 0;
+  if(product == 'phone'){
+    currentProductPrice = productCount * 100;
+  }
+  if(product == 'case'){
+    currentProductPrice = productCount * 50;
+  }
+  document.querySelector(`#${product}Price`).innerText =  `$${currentProductPrice}`;
+  total();
 }
 
-// Deduct the price
-function deductPrice(productInitialPrice, ProductCurrentPrice){
-  return ProductCurrentPrice - productInitialPrice;
+function total(){
+  const phoneQuantity = inputField('phone');
+  const caseQuantity = inputField('case');
+
+  const subTotal = (phoneQuantity * 100) + (caseQuantity * 50);
+  document.querySelector('#sub-total').innerText = '$' + subTotal;
+
+  const tax = Math.round(subTotal * .01);
+  document.querySelector('#tax').innerText = '$' + tax;
+
+  const grandTotal = subTotal + tax;
+  document.querySelector('#grand-total').innerText = '$' + grandTotal;
 }
 
-// subtotal for add
-function subTotalAdd(amountToDeduct){
-  let getSubTotal = parseFloat(subTotal.innerText);
-  return getSubTotal + amountToDeduct;
-}
-
-// subtotal for Deduct
-function subTotalDeduct(amountToDeduct){
-  let getSubTotal = parseFloat(subTotal.innerText);
-  return getSubTotal - amountToDeduct;
+function inputField(product){
+  const productInput = document.querySelector(`#${product}Quantity`);
+  const productQuantity = parseInt(productInput.value);
+  return productQuantity;
 }
